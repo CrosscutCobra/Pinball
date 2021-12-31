@@ -1,0 +1,68 @@
+<html>
+
+<head>
+    <style>
+        .stage {
+            background-color: lightblue;
+            width: 300px;
+            height: 200px;
+        }
+
+        .ball {
+            background-color: blueviolet;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+
+            left: 140px;
+            top: 90px;
+            position: relative;
+        }
+    </style>
+
+</head>
+
+<body>Pinball
+    <div class="stage">
+        <div class="ball">
+        </div>
+    </div>
+
+    <script>
+        const stage = document.getElementsByClassName("stage")[0];
+        const stageWidth = stage.computedStyleMap().get("width").value;
+        const ball = document.getElementsByClassName("ball")[0];
+        const ballWidth = ball.computedStyleMap().get("width").value;
+        let step = 5;
+
+
+        const move = () => {
+            let ballleft = ball.computedStyleMap().get("left").value;
+
+            let newballleft = ballleft + step;
+
+            if(newballleft>= stageWidth - ballWidth) {
+                step = step*-1;
+            }
+
+            if(newballleft <= 0) {
+                step = step*-1;
+            }
+
+
+            ball.style.setProperty("left", `${newballleft}px`);
+        }
+
+        setInterval(move, 25);
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
