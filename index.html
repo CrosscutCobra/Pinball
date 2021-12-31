@@ -5,7 +5,7 @@
         .stage {
             background-color: lightblue;
             width: 300px;
-            height: 200px;
+            height: 400px;
         }
 
         .ball {
@@ -31,41 +31,42 @@
     <script>
         const stage = document.getElementsByClassName("stage")[0];
         const stageWidth = stage.computedStyleMap().get("width").value;
+        const stageHeight = stage.computedStyleMap().get("height").value;
+
         const ball = document.getElementsByClassName("ball")[0];
         const ballWidth = ball.computedStyleMap().get("width").value;
-        let step = 5;
+        const ballHeight = ball.computedStyleMap().get("height").value;
 
+        let xVelocity = 5;
+        let yVelocity = 5;
+
+        const render = (x, y) => {
+            ball.style.setProperty("left", `${x}px`);
+            ball.style.setProperty("top", `${y}px`);
+        };
 
         const move = () => {
-            let ballleft = ball.computedStyleMap().get("left").value;
+            const currentX = ball.computedStyleMap().get("left").value;
+            const currentY = ball.computedStyleMap().get("top").value;
 
-            let newballleft = ballleft + step;
+            const newX = currentX + xVelocity;
+            const newY = currentY + yVelocity;
 
-            if(newballleft>= stageWidth - ballWidth) {
-                step = step*-1;
+            if (newX >= stageWidth - ballWidth || newX <= 0) {
+                xVelocity *= -1;
             }
 
-            if(newballleft <= 0) {
-                step = step*-1;
+            if (newY >= stageHeight - ballHeight || newY <= 0) {
+                yVelocity *= -1;
             }
 
+            render(newX, newY);
+        };
 
-            ball.style.setProperty("left", `${newballleft}px`);
-        }
-
-        setInterval(move, 25);
-
-
-
-
-
-
+        setInterval(move, 50);
 
     </script>
 
 </body>
 
 </html>
-
-
-
