@@ -1,6 +1,7 @@
 const stage = document.getElementById("stage");
 const stageWidth = 300;
 const stageHeight = 400;
+const keyState = {};
 
 stage.width = stageWidth;
 stage.height = stageHeight;
@@ -15,12 +16,21 @@ const ball = {
     yVelocity: 5
 };
 
+const bat = {
+    x: 0,
+    y: stageHeight - 10,
+    width: 70,
+    height: 10,
+    velocity: 8
+
+}
+
 const renderStage = () => {
     ctx.fillStyle = "yellow";
     ctx.fillRect(0, 0, stageWidth, stageHeight);
 };
 
-const renderBall = (ball) => {
+const renderBall = () => {
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI, false);
     ctx.fillStyle = "blueviolet";
@@ -35,13 +45,48 @@ const calculateBall = () => {
         ball.xVelocity *= -1;
     }
 
-    if (ball.y >= stageHeight - ball.r || ball.y <= ball.r) {
+    if (ball.y <= ball.r) {
         ball.yVelocity *= -1;
+    }
+
+    if (ball.y >= stageHeight - ball.r - bat.height &&
+        (ball.x >= bat.x && ball.x <= bat.x + bat.width)) {
+        ball.yVelocity *= -1;
+    }
+
+    if (ball.y >= stageHeight - ball.r) {
+        clearInterval(timer);
+        alert("Game over")
     }
 };
 
-setInterval(() => {
+const calculateBat = () => {
+    if (keyState['ArrowLeft']) {
+        bat.x = Math.max(0, bat.x - bat.velocity);
+    }
+
+    if (keyState['ArrowRight']) {
+        bat.x = Math.min(stageWidth - bat.width, bat.x + bat.velocity);
+    }
+}
+
+const renderBat = () => {
+    ctx.fillStyle = "green";
+    ctx.fillRect(bat.x, bat.y, bat.width, bat.height);
+};
+
+window.addEventListener('keydown', (e) => {
+    keyState[e.key] = true;
+}, true);
+
+window.addEventListener('keyup', (e) => {
+    keyState[e.key] = false;
+}, true);
+
+const timer = setInterval(() => {
     calculateBall();
+    calculateBat();
     renderStage();
-    renderBall(ball);
+    renderBat();
+    renderBall();
 }, 50);
